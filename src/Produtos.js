@@ -13,6 +13,8 @@ class Produtos extends Component {
         this.handleNewCategoria = this.handleNewCategoria.bind(this)
         this.renderCategoria = this.renderCategoria.bind(this)
         this.editCategoria = this.editCategoria.bind(this)
+        this.cancelEditing = this.cancelEditing.bind(this)
+        this.handleEditCategoria = this.handleEditCategoria.bind(this)
     }
 
     componentDidMount() {
@@ -25,12 +27,21 @@ class Produtos extends Component {
         })
     }
 
+    cancelEditing() {
+        this.setState({
+            editingCategoria: ''
+        })
+    }
+
     renderCategoria(cat) {
         return (
             <li key={cat.id}>
                 {this.state.editingCategoria === cat.id &&
-                    <div>
-                        <input type='text' defaultValue={cat.categoria}/>
+                    <div className='input-group'>
+                        <div className='input-group-btn'>
+                            <input ref={'cat-' + cat.id} onKeyUp={this.handleEditCategoria} className='form-control' type='text' defaultValue={cat.categoria} />
+                            <button className='btn' onClick={this.cancelEditing}>Cancelar</button>
+                        </div>
                     </div>
                 }
                 {this.state.editingCategoria !== cat.id &&
@@ -54,6 +65,18 @@ class Produtos extends Component {
                 categoria: this.refs.categoria.value
             })
             this.refs.categoria.value = ''
+        }
+    }
+
+    handleEditCategoria(key) {
+        if (key.keyCode === 13) {
+            this.props.editCategoria({
+                id: this.state.editingCategoria,
+                categoria: this.refs['cat-' + this.state.editingCategoria].value
+            })
+            this.setState({
+                editingCategoria: ''
+            })
         }
     }
 
