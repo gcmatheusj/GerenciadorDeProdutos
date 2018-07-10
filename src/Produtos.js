@@ -100,6 +100,7 @@ class Produtos extends Component {
                     <Route exact path={match.url+'/novo'} render={(props) => {
                         return (
                             <ProdutoNovo {...props}
+                            createProduto={this.props.createProduto}
                             categorias={categorias} 
                         />)
                     }} />
