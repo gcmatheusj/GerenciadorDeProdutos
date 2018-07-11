@@ -1,31 +1,20 @@
 import React, { Component } from 'react'
-import Axios from 'axios'
+import {Link} from 'react-router-dom'
 
 class Categoria extends Component{
     constructor(props){
         super(props)
-        this.loadData = this.loadData.bind(this)
         this.state = {
-            produtos: [],
-            categoria: {}
+            id: null
         }
+        this.loadData = this.loadData.bind(this)
+        this.renderProduto = this.renderProduto.bind(this)
     }
 
     loadData(id){
-        Axios
-            .get('http://localhost:3001/produtos?categoria='+id)
-            .then(res => {
-                this.setState({
-                    produtos: res.data
-                })
-            })
-        Axios
-            .get('http://localhost:3001/categorias/'+id)
-            .then(res => {
-                this.setState({
-                    categoria: res.data
-                })
-            })
+        this.setState({ id })
+        this.props.loadProdutos(id)
+        this.props.loadCategoria(id)
     }
 
     componentDidMount(){
@@ -34,20 +23,32 @@ class Categoria extends Component{
     }
 
     componentWillReceiveProps(newProps){
-        this.loadData(newProps.match.params.catId)
+        if(newProps.match.params.catId !== this.state.id){
+            this.loadData(newProps.match.params.catId)
+        }
     }
 
     renderProduto(produto){
         return (
-            <p key={produto.id} className='well'>{produto.produto}</p> 
+            <p key={produto.id} className='well'>
+                {produto.produto}
+                <button onClick={() => {
+                    this.props.removeProduto(produto)
+                        .then(res => this.loadData(this.props.match.params.catId))
+                }}>Excluir</button>
+                <Link to={'/produtos/editar/'+produto.id}>Editar</Link>
+            </p> 
         )
     }
 
     render() {
-        const { produtos } = this.state
+        const { produtos, categoria } = this.props
         return (
             <div>
-                <h1>{this.state.categoria.categoria}</h1>
+                <h1>{categoria.categoria}</h1>
+                {this.props.produtos.length === 0 && 
+                    <p className='alert alert-danger'>Nenhuma produto.</p>
+                }
                 {(produtos.map(this.renderProduto))}
             </div>
         )

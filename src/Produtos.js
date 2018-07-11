@@ -4,6 +4,7 @@ import { Route, Link } from 'react-router-dom'
 import ProdutosHome from './ProdutosHome'
 import Categoria from './Categoria'
 import ProdutoNovo from './ProdutoNovo'
+import ProdutoEditar from './ProdutoEditar'
 
 class Produtos extends Component {
     constructor(props) {
@@ -83,6 +84,7 @@ class Produtos extends Component {
 
     render() {
         const { match, categorias } = this.props
+        console.log(match.url)
         return (
             <div className='row'>
                 <div className='col-md-2'>
@@ -93,18 +95,38 @@ class Produtos extends Component {
                     <div className='well well-sm'>
                         <input className='form-control' onKeyUp={this.handleNewCategoria} type='text' ref='categoria' placeholder='Nova categoria' />
                     </div>
+                    <Link to='/produtos/novo'>Novo produto</Link>
                 </div>
                 <div className='col-md-10'>
                     <h1>Produtos</h1>
                     <Route exact path={match.url} component={ProdutosHome} />
-                    <Route exact path={match.url+'/novo'} render={(props) => {
+                    <Route exact path={match.url + '/novo'} render={(props) => {
                         return (
                             <ProdutoNovo {...props}
-                            createProduto={this.props.createProduto}
-                            categorias={categorias} 
-                        />)
+                                createProduto={this.props.createProduto}
+                                categorias={categorias}
+                            />)
                     }} />
-                    <Route exact path={match.url + '/categoria/:catId'} component={Categoria} />
+                    <Route path={match.url + '/editar/:id'}
+                        render={(props) => {
+                            return (
+                                <ProdutoEditar {...props}
+                                    categorias={categorias}
+                                    readProduto={this.props.readProduto}
+                                    editProduto={this.props.editProduto}
+                                />)
+                        }}
+                    />
+                    <Route path={match.url + '/categoria/:catId'} render={(props) => {
+                        return (
+                            <Categoria {...props}
+                                loadCategoria={this.props.loadCategoria}
+                                loadProdutos={this.props.loadProdutos}
+                                produtos={this.props.produtos}
+                                categoria={this.props.categoria}
+                                removeProduto={this.props.removeProduto}
+                            />)
+                    }} />
                 </div>
             </div>
         )

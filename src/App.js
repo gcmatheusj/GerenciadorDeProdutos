@@ -14,7 +14,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      categorias: []
+      categorias: [],
+      categoria: '',
+      produtos: []
     }
     this.loadCategorias = this.loadCategorias.bind(this)
     this.removeCategoria = this.removeCategoria.bind(this)
@@ -22,6 +24,11 @@ class App extends Component {
     this.editCategoria = this.editCategoria.bind(this)
     
     this.createProduto = this.createProduto.bind(this)
+    this.loadProdutos = this.loadProdutos.bind(this)
+    this.loadCategoria = this.loadCategoria.bind(this)
+    this.removeProduto = this.removeProduto.bind(this)
+    this.readProduto = this.readProduto.bind(this)
+    this.editProduto = this.editProduto.bind(this)
   }
 
   loadCategorias() {
@@ -33,9 +40,32 @@ class App extends Component {
       })
   }
 
+  loadProdutos(categoria){
+    this.props.api.loadProdutos(categoria)
+      .then(res => {
+        this.setState({
+          produtos: res.data
+        })
+      })
+      console.log(categoria)
+  }
+
+  loadCategoria(categoria){
+    this.props.api.readCategoria(categoria)
+      .then(res => {
+        this.setState({
+          categoria: res.data
+        })
+      })
+  }
+
   removeCategoria(categoria) {
     this.props.api.deleteCategoria(categoria.id)
       .then((res) => this.loadCategorias())
+  }
+
+  removeProduto(produto){
+    return this.props.api.deleteProduto(produto.id)
   }
 
   createCategoria(categoria){
@@ -49,7 +79,15 @@ class App extends Component {
   }
 
   createProduto(produto){
-    this.props.api.createProduto(produto)
+    return this.props.api.createProduto(produto)
+  }
+
+  readProduto(id){
+    return this.props.api.readProduto(id)
+  }
+
+  editProduto(produto){
+    return this.props.api.editProduto(produto)
   }
 
   render() {
@@ -79,7 +117,14 @@ class App extends Component {
                 editCategoria={this.editCategoria}
                 categorias={this.state.categorias}
 
+                editProduto={this.editProduto}
+                readProduto={this.readProduto}
                 createProduto={this.createProduto}
+                loadProdutos={this.loadProdutos}
+                produtos={this.state.produtos}
+                loadCategoria={this.loadCategoria}
+                categoria={this.state.categoria}
+                removeProduto={this.removeProduto}
               />)
             }} />
           </div>

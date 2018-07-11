@@ -2,18 +2,18 @@
   "produtos": [
     {
       "id": 1,
-      "produto": "Sabão Liquido",
-      "categoria": 1
-    },
-    {
-      "id": 2,
       "produto": "Sabão em Pó",
-      "categoria": 1
+      "categoria": "1"
     },
     {
-      "id": 3,
-      "produto": "Biscoito",
-      "categoria": 2
+      "produto": "Macarrão",
+      "categoria": "2",
+      "id": 2
+    },
+    {
+      "produto": "Produto utilidades",
+      "categoria": "3",
+      "id": 3
     }
   ],
   "categorias": [
